@@ -3,6 +3,18 @@
   "description": "Client & Server JSON-RPC 2.0 compatible pour PHP 8.4",
   "type": "library",
   "license": "BSD-3-Clause",
+      "keywords": [
+        "API",
+        "RPC",
+        "JSONRPC",
+        "php8"
+    ],
+    "authors": [
+        {
+            "name": "Simon GILBERT",
+            "email": "gilbert.simonj@gmail.com"
+        }
+    ],
   "require": {
     "php": "^8.3",
     "ext-curl": "*",
