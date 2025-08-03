@@ -7,17 +7,13 @@ namespace JsonRpc\Request;
 class Request
 {
     private string $jsonrpc = '2.0';
-    private string $method;
-    private array $params;
-    private int|string $id;
-    private string $endpoint = '';
 
-    public function __construct(string $method, array $params = [], int|string $id = 0, string $endpoint)
+    public function __construct(
+        private string $method,
+        private array $params = [],
+        private int|string $id = 0,
+        private string $endpoint = '')
     {
-        $this->method = $method;
-        $this->params = $params;
-        $this->id = $id;
-        $this->endpoint = $endpoint;
     }
 
     public function toArray(): array
