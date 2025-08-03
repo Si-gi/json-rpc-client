@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace JsonRpc\tests;
+
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use JsonRpc\RPCClient;

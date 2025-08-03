@@ -8,7 +8,15 @@ use Symfony\Component\Yaml\Yaml;
 
 class ConfigBuilder
 {
-    public static function fromFile(string $path, ConfigInterface $config): ConfigInterface
+    public static function build(string $path, ConfigInterface $config): ConfigInterface
+    {
+
+        $data = self::getConfigfromFile($path);
+        
+        $config->hydrate($data);
+        return $config;
+    }
+    public static function getConfigfromFile(string $path): array
     {
         if (!file_exists($path)) {
             throw new \InvalidArgumentException("Fichier de configuration introuvable: $path");
@@ -16,15 +24,14 @@ class ConfigBuilder
 
         $extension = pathinfo($path, PATHINFO_EXTENSION);
 
-        $data = match ($extension) {
+        /** @data array */
+        return match ($extension) {
             'json' => json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR),
             'yaml', 'yml' => Yaml::parseFile($path),
             'env' => self::parseEnv($path),
             default => throw new \RuntimeException("Format non supporté: $extension")
         };
 
-        $config->hydrate($data);
-        return $config;
     }
 
     private static function parseEnv(string $file): array
