@@ -14,15 +14,15 @@ class Response
 
     public function __construct(array $data)
     {
-        $this->jsonrpc = $data['jsonrpc'];
+        $this->jsonrpc = $data['jsonrpc'] ?? "";
         $this->result = $data['result'] ?? null;
         $this->error = $data['error'] ?? null;
-        var_dump($this->error);
         $this->id = $data['id'];
 
-        if ($this->jsonrpc !== '2.0') {
-            throw new JsonRpcException('Version JSON-RPC incorrect');
-        }
+        // @Todo find a good way to manage API Server who doesn't rerspect RPC 2.0 standars
+        // if ($this->jsonrpc !== '2.0') {
+        //     throw new JsonRpcException('Version JSON-RPC incorrect');
+        // }
 
         if (null !== $this->error) {
             throw new JsonRpcException(
