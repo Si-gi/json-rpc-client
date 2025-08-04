@@ -12,30 +12,36 @@ use JsonRpc\Exception\TransportException;
 class CurlTransport implements TransportInterface
 {
 
+    public function __construct(private CurlClient $curlClient)
+    {
+        
+    }
     public function send(Request $request): array
     {
+
         $endpoint = $request->getEndpoint();
         if (empty($endpoint)) {
-            throw new TransportException("Aucun endpoint fourni dans la requête");
+            throw new TransportException("Empty Endpoint", 0, ['request' => $request]);
         }
 
         $payload = json_encode($request->toArray(), JSON_THROW_ON_ERROR);
 
-        $ch = curl_init($endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        $this->curlClient->init($endpoint)
+        ->setOption(CURLOPT_RETURNTRANSFER, true)
+        ->setOption(CURLOPT_HTTPHEADER, ['Content-Type: application/json'])
+        ->setOption(CURLOPT_POSTFIELDS, $payload);
 
-        $response = curl_exec($ch);
+        $response = $this->curlClient->exec();
+
         if (false === $response) {
-            throw new TransportException(curl_error($ch));
+            throw new TransportException($this->curlClient->getError(), 0, ['endpoint' => $endpoint, 'payload' => $payload]);
         }
 
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $code = $this->curlClient->getInfo(CURLINFO_HTTP_CODE);
+        $this->curlClient->close();
 
         if ($code < 200 || $code >= 300) {
-            throw new TransportException("HTTP $code reçu");
+            throw new TransportException("HTTP $code reçu", $code, ['response' => $response]);
         }
 
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);

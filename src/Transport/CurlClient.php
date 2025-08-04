@@ -38,7 +38,7 @@ class CurlClient
         return curl_exec($this->curl);
     }
 
-    public function getInfo(int $option)
+    public function getInfo(int $option): mixed
     {
         return curl_getinfo($this->curl, $option);
     }
