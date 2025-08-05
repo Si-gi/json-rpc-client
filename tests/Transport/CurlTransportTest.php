@@ -77,7 +77,7 @@ class CurlTransportTest extends TestCase{
     public function testShouldHandleNon200HttpResponsesGracefully()
     {
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('HTTP 500 reçu');
+        $this->expectExceptionMessage('HTTP 500 received');
 
         $request = $this->prophesize(Request::class);
         $request->getEndpoint()->willReturn('http://example.com');
