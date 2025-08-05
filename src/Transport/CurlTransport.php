@@ -41,7 +41,7 @@ class CurlTransport implements TransportInterface
         $this->curlClient->close();
 
         if ($code < 200 || $code >= 300) {
-            throw new TransportException("HTTP $code reçu", $code, ['response' => $response]);
+            throw new TransportException("HTTP $code received", $code, ['response' => $response]);
         }
 
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
